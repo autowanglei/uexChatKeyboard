@@ -5,9 +5,6 @@
         className="org.zywx.wbpalmstar.plugin.chatkeyboard.EUExChatKeyboard" uexName="uexChatKeyboard" >
         <method name="open" />
         <method name="close" />
-        <method name="onCommit" />
-        <method name="onShareMenuItem" />
-        <method name="onVoiceAction" />
         <method name="getInputBarHeight"/>
         <method name="hideKeyboard"/>
         <method name="insertTextByKeyword"/>

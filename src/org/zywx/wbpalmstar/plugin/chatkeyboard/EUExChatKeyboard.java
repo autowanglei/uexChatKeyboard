@@ -18,6 +18,12 @@
 
 package org.zywx.wbpalmstar.plugin.chatkeyboard;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -28,12 +34,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.zywx.wbpalmstar.engine.EBrowserView;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
-import org.zywx.wbpalmstar.engine.universalex.EUExUtil;
-
 public class EUExChatKeyboard extends EUExBase {
 
     private static final String TAG = "EUExChatKeyboard";
@@ -43,6 +43,7 @@ public class EUExChatKeyboard extends EUExBase {
     private static final int CHATKEYBOARD_MSG_CLOSE = 1;
     private static final int CHATKEYBOARD_MSG_GET_INPUTBAR_HEIGHT = 2;
     private static final int CHATKEYBOARD_MSG_HIDE_KEYBOARD = 3;
+    private static EUExChatKeyboard mEUExChatKeyboard = null;
 
     private ACEChatKeyboardView mChatKeyboardView;
 
@@ -71,6 +72,7 @@ public class EUExChatKeyboard extends EUExBase {
     }
 
     public void open(String[] params) {
+        mEUExChatKeyboard = this;
         sendMessageWithType(CHATKEYBOARD_MSG_OPEN, params);
     }
 
@@ -184,6 +186,7 @@ public class EUExChatKeyboard extends EUExBase {
         removeViewFromCurrentWindow(mChatKeyboardView);
         mChatKeyboardView.onDestroy();
         mChatKeyboardView = null;
+        mEUExChatKeyboard = null;
     }
 
     /**
@@ -192,6 +195,17 @@ public class EUExChatKeyboard extends EUExBase {
     private void handleHideKeyboard() {
         if (mChatKeyboardView != null) {
             mChatKeyboardView.outOfViewTouch();
+        }
+    }
+
+    /**
+     * 解决点击加号调出键盘后，按home键键盘不消失的问题。
+     * 
+     * @param context
+     */
+    public static void onActivityPause(Context context) {
+        if (mEUExChatKeyboard != null) {
+            mEUExChatKeyboard.handleHideKeyboard();
         }
     }
 
